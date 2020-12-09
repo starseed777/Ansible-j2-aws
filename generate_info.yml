@@ -1,0 +1,21 @@
+---
+- name: Playbook generates info to send to upper management 
+  hosts: localhost
+  connection: local 
+  gather_facts: false
+  vars:
+    virginia: us-east-1
+
+  tasks:
+  - name: Getting ec2 instance info
+    ec2_instance_facts:
+      region: "{{ virginia }}"
+      filters:
+        "tag:Env": dev
+    register: manager
+
+  - name: generates csv
+    template:
+      src: generate_csv.j2
+      dest: ec2_instance_info.csv
+
